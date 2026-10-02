@@ -9,20 +9,6 @@ const WHAT_WE_BUILD = [
   { title: "AI-Assisted Creative Systems", desc: "Custom AI systems — copilots, automation and memory layers — embedded into how your business actually runs." },
 ];
 
-const CASE_STUDIES = [
-  { before: "Outdated Website", after: "Premium Redesign", result: "Modern architecture, credible first impression." },
-  { before: "Weak Branding", after: "Elevated Identity", result: "A visual system built for authority." },
-  { before: "Low Engagement", after: "Organized Content System", result: "A content engine that compounds." },
-  { before: "No Funnel", after: "Lead Generation Infrastructure", result: "A pipeline that runs on its own." },
-];
-
-const FEATURED_WORK = [
-  { category: "Websites", title: "Meridian Capital" },
-  { category: "Brand Film", title: "Halcyon Group" },
-  { category: "Photography", title: "Solstice Aesthetics" },
-  { category: "AI Systems", title: "Ionic Ventures" },
-];
-
 const SIX_SYSTEMS = [
   { name: "Creative Systems", tagline: "The operating system for your creative output." },
   { name: "Brand Systems", tagline: "Identity built to hold authority." },
@@ -92,13 +78,6 @@ export default function HomePage() {
             </div>
           </Reveal>
 
-          <Reveal delay={0.2}>
-            <div className="mx-auto mt-16 flex max-w-xl flex-wrap items-center justify-center gap-x-10 gap-y-4 text-sm text-muted">
-              <span><span className="font-display text-paper">250+</span> Projects Delivered</span>
-              <span><span className="font-display text-paper">100+</span> Brands Served</span>
-              <span><span className="font-display text-paper">95%</span> Client Retention</span>
-            </div>
-          </Reveal>
         </div>
       </section>
 
@@ -118,64 +97,6 @@ export default function HomePage() {
             <div key={s.title} className="group bg-ink p-7 transition-colors hover:bg-panel md:p-8">
               <h3 className="font-serif text-lg text-paper">{s.title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-muted">{s.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <div className="rule" />
-
-      {/* Case studies */}
-      <section className="container-edit py-20 md:py-28">
-        <Reveal>
-          <span className="kicker">Case Studies</span>
-          <h2 className="mt-4 max-w-xl font-serif text-3xl text-paper md:text-4xl">
-            Real Transformation. Real Impact.
-          </h2>
-        </Reveal>
-
-        <div className="mt-12 grid gap-6 sm:grid-cols-2">
-          {CASE_STUDIES.map((c) => (
-            <div key={c.after} className="rounded-sm border border-line p-7">
-              <div className="flex items-center gap-3 text-xs">
-                <span className="rounded-full border border-line px-3 py-1 text-muted">Before</span>
-                <span className="text-muted">{c.before}</span>
-              </div>
-              <div className="my-3 h-px w-full bg-line" />
-              <div className="flex items-center gap-3 text-xs">
-                <span className="rounded-full bg-signal/15 px-3 py-1 text-signal">After</span>
-                <span className="text-paper">{c.after}</span>
-              </div>
-              <p className="mt-4 text-sm leading-relaxed text-muted">{c.result}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <div className="rule" />
-
-      {/* Featured work */}
-      <section className="container-edit py-20 md:py-28">
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <Reveal>
-            <span className="kicker">Featured Work</span>
-          </Reveal>
-          <Link
-            href="/portfolio"
-            className="focus-ring rounded-sm text-sm text-muted transition-colors hover:text-signal"
-          >
-            View full portfolio →
-          </Link>
-        </div>
-
-        <div className="mt-10 grid gap-6 sm:grid-cols-2">
-          {FEATURED_WORK.map((w) => (
-            <div
-              key={w.title}
-              className="group rounded-sm border border-line p-7 transition-colors hover:border-signal/40"
-            >
-              <div className="text-xs text-muted">{w.category}</div>
-              <div className="mt-2 font-serif text-xl text-paper">{w.title}</div>
             </div>
           ))}
         </div>
@@ -210,7 +131,7 @@ export default function HomePage() {
 
       {/* Client experience */}
       <section className="container-edit py-20 md:py-28">
-        <div className="grid items-center gap-12 md:grid-cols-2">
+        <div>
           <Reveal>
             <span className="kicker">Your Client Experience</span>
             <h2 className="mt-4 font-serif text-3xl text-paper md:text-4xl">
@@ -226,17 +147,6 @@ export default function HomePage() {
             >
               Enter Client Portal
             </Link>
-          </Reveal>
-          <Reveal delay={0.08}>
-            <blockquote className="rounded-sm border border-line bg-panel p-8">
-              <p className="font-serif text-xl italic leading-snug text-paper">
-                &ldquo;Linc Productions doesn&rsquo;t deliver assets. They deliver a system
-                that keeps compounding.&rdquo;
-              </p>
-              <footer className="mt-5 text-xs uppercase tracking-wider text-muted">
-                Managing Partner, Growth-Stage Firm
-              </footer>
-            </blockquote>
           </Reveal>
         </div>
       </section>

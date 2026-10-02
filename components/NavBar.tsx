@@ -26,7 +26,7 @@ export default function NavBar() {
       <div className="container-edit">
         <div className="flex items-center justify-between gap-4 rounded-[28px] border border-white/10 bg-black/60 px-5 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.4)] backdrop-blur-xl">
           <Link href="/" className="flex items-center gap-3 focus-ring rounded-sm">
-            <Image src="/images/logo.png" alt="" width={32} height={32} className="h-8 w-8 object-contain" />
+            <Image src="/images/logo-mark.png" alt="" width={680} height={390} priority className="h-8 w-auto md:h-10" />
             <span className="font-display text-sm tracking-[0.08em] text-paper">
               Linc Productions
             </span>

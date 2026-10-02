@@ -8,17 +8,6 @@ const CATEGORIES = [
   { name: "AI Systems", tag: "AI-Assisted Creative", img: "/images/site-morena.png" },
 ];
 
-const CASE_STUDIES = [
-  { title: "Meridian Capital", tag: "Website System" },
-  { title: "Halcyon Group", tag: "Brand Film" },
-  { title: "Solstice Aesthetics", tag: "Campaign" },
-  { title: "Ionic Ventures", tag: "AI Copilot" },
-  { title: "Northfield Partners", tag: "Website System" },
-  { title: "Ember & Co", tag: "Brand Film" },
-  { title: "Vantage Health", tag: "Campaign" },
-  { title: "Arclight Studios", tag: "AI Copilot" },
-];
-
 export default function PortfolioPage() {
   return (
     <section className="container-edit py-20 md:py-28">
@@ -48,26 +37,6 @@ export default function PortfolioPage() {
             </div>
           </Reveal>
         ))}
-      </div>
-
-      <div className="mt-24">
-        <Reveal>
-          <span className="kicker">Case studies</span>
-          <p className="mt-3 max-w-copy text-sm text-muted">
-            Placeholder engagements — swap in real client work before launch.
-          </p>
-        </Reveal>
-        <div className="mt-8 divide-y divide-line border-y border-line">
-          {CASE_STUDIES.map((c) => (
-            <div
-              key={c.title}
-              className="flex items-center justify-between py-5 text-paper"
-            >
-              <span className="font-serif text-lg">{c.title}</span>
-              <span className="text-xs text-muted">{c.tag}</span>
-            </div>
-          ))}
-        </div>
       </div>
     </section>
   );
