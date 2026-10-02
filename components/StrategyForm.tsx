@@ -55,7 +55,7 @@ export default function StrategyForm() {
         </p>
         <a
           href="/"
-          className="mt-8 inline-block focus-ring rounded-sm bg-paper px-6 py-3 text-sm font-medium text-ink"
+          className="mt-8 inline-block focus-ring rounded-full bg-paper px-6 py-3 text-sm font-medium text-ink"
         >
           Back to Home
         </a>
@@ -171,7 +171,7 @@ export default function StrategyForm() {
             type="button"
             disabled={!canAdvance()}
             onClick={() => setStep((s) => s + 1)}
-            className="focus-ring rounded-sm bg-paper px-6 py-2.5 text-sm font-medium text-ink transition-opacity disabled:opacity-40"
+            className="focus-ring rounded-full bg-paper px-6 py-2.5 text-sm font-medium text-ink transition-opacity disabled:opacity-40"
           >
             Continue
           </button>
@@ -179,7 +179,7 @@ export default function StrategyForm() {
           <button
             type="button"
             onClick={submit}
-            className="focus-ring rounded-sm bg-paper px-6 py-2.5 text-sm font-medium text-ink"
+            className="focus-ring rounded-full bg-paper px-6 py-2.5 text-sm font-medium text-ink"
           >
             Submit to Linc OS
           </button>

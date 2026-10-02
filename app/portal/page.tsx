@@ -13,6 +13,11 @@ const FILES = [
   { name: "Site Map.pdf", size: "220 KB" },
 ];
 
+const MESSAGES = [
+  { from: "Ava (Brand)", time: "2h ago", text: "Sent over round 2 of the homepage hero concepts — let us know which direction to run with." },
+  { from: "Linc Productions", time: "1d ago", text: "Shoot schedule for next week is locked — confirming call time Thursday 9am." },
+];
+
 const APPROVALS = [
   { name: "Homepage design" },
   { name: "Hero film cut" },
@@ -58,6 +63,21 @@ export default function PortalPage() {
               <li key={f.name} className="flex items-center justify-between text-sm">
                 <span className="text-paper">{f.name}</span>
                 <span className="text-xs text-muted">{f.size}</span>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+
+        <Reveal className="rounded-sm border border-line p-7">
+          <h2 className="text-sm text-paper">Messages</h2>
+          <ul className="mt-5 space-y-4">
+            {MESSAGES.map((m) => (
+              <li key={m.from} className="text-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-paper">{m.from}</span>
+                  <span className="text-xs text-muted">{m.time}</span>
+                </div>
+                <p className="mt-1 text-xs leading-relaxed text-muted">{m.text}</p>
               </li>
             ))}
           </ul>

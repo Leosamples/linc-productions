@@ -33,7 +33,7 @@ export default function AboutPage() {
           </p>
           <Link
             href="/strategy"
-            className="mt-8 inline-block focus-ring rounded-sm bg-paper px-6 py-3 text-sm font-medium text-ink transition-transform hover:-translate-y-0.5"
+            className="mt-8 inline-block focus-ring rounded-full bg-paper px-6 py-3 text-sm font-medium text-ink transition-transform hover:-translate-y-0.5"
           >
             Book a Strategy Session
           </Link>
