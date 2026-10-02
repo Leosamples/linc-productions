@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #050505;
+  color: #F5F2EA;
+}
+
+::selection {
+  background: #35B7FF;
+  color: #050505;
+}
+
+.container-edit {
+  width: 100%;
+  max-width: 78rem;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .container-edit {
+    padding-inline: 3rem;
+  }
+}
+
+.rule {
+  height: 1px;
+  background: rgba(245, 242, 234, 0.1);
+}
+
+.kicker {
+  font-family: var(--font-grotesk);
+  font-size: 0.8125rem;
+  color: #9C9890;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.kicker::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: #35B7FF;
+  display: inline-block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@keyframes logoFloat {
+  0% { transform: translateY(0) rotateX(6deg) rotateY(-8deg); }
+  25% { transform: translateY(-10px) rotateX(-4deg) rotateY(6deg); }
+  50% { transform: translateY(-3px) rotateX(6deg) rotateY(10deg); }
+  75% { transform: translateY(-12px) rotateX(-6deg) rotateY(-6deg); }
+  100% { transform: translateY(0) rotateX(6deg) rotateY(-8deg); }
+}
+
+.hero-mark {
+  animation: logoFloat 8s ease-in-out infinite;
+  transform-style: preserve-3d;
+  filter: drop-shadow(0 25px 45px rgba(0,0,0,0.55)) drop-shadow(0 0 60px rgba(53,183,255,0.10));
+}
+
+.hero-mark-wrap {
+  perspective: 900px;
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid #35B7FF;
+  outline-offset: 3px;
+}
