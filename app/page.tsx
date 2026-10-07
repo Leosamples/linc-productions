@@ -1,5 +1,8 @@
+import Image from "next/image";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+import HeroBackdrop from "@/components/HeroBackdrop";
+import ShootingStars from "@/components/ShootingStars";
 
 const WHAT_WE_BUILD = [
   { title: "Brand Presence Systems", desc: "Brand strategy, identity systems and voice — built to make executive businesses instantly recognizable and instantly trusted." },
@@ -22,22 +25,24 @@ export default function HomePage() {
   return (
     <>
       {/* Hero */}
+      <HeroBackdrop />
       <section className="relative flex min-h-[92vh] flex-col justify-center overflow-hidden">
-        <div className="absolute inset-0 -z-10">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            poster="/images/hero-earth-poster.jpg"
-            className="h-full w-full object-cover opacity-80"
-          >
-            <source src="/video/hero-earth.mp4" type="video/mp4" />
-          </video>
-          <div className="absolute inset-0 bg-gradient-to-b from-ink/50 via-ink/40 to-ink" />
-        </div>
+        <ShootingStars />
 
-        <div className="container-edit py-24 text-center">
+        <div className="container-edit relative py-24 text-center [text-shadow:0_2px_24px_rgba(0,0,0,0.55)]">
+          <Reveal>
+            <div className="hero-mark-wrap mb-10 flex justify-center">
+              <Image
+                src="/images/logo-mark.png"
+                alt="Linc Productions mark"
+                width={680}
+                height={390}
+                priority
+                className="hero-mark h-24 w-auto md:h-32"
+              />
+            </div>
+          </Reveal>
+
           <Reveal>
             <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/50 px-4 py-1.5 text-xs text-paper/80 backdrop-blur">
               <span className="h-1.5 w-1.5 rounded-full bg-signal" />

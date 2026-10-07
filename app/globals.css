@@ -83,6 +83,43 @@ body {
   perspective: 900px;
 }
 
+/* Shooting stars (hero). Each star streaks down-left early in its cycle,
+   then stays hidden for the rest, so they appear one at a time. */
+.shooting-star {
+  position: absolute;
+  width: 160px;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.95), rgba(53, 183, 255, 0.55) 30%, transparent);
+  opacity: 0;
+  transform: rotate(-35deg) translateX(0);
+  animation: shootingStar 8s linear infinite;
+}
+
+.shooting-star::before {
+  content: "";
+  position: absolute;
+  left: -2px;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: #fff;
+  transform: translateY(-50%);
+  box-shadow: 0 0 10px 3px rgba(255, 255, 255, 0.85), 0 0 22px 6px rgba(53, 183, 255, 0.55);
+}
+
+@keyframes shootingStar {
+  0% { opacity: 0; transform: rotate(-35deg) translateX(0); }
+  2% { opacity: 1; }
+  14% { opacity: 0; transform: rotate(-35deg) translateX(-720px); }
+  100% { opacity: 0; transform: rotate(-35deg) translateX(-720px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shooting-star { display: none; }
+}
+
 .focus-ring:focus-visible {
   outline: 2px solid #35B7FF;
   outline-offset: 3px;
