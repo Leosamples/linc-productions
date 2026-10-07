@@ -1,0 +1,105 @@
+{
+  "site": {
+    "title": "Portfolio — Linc Productions",
+    "description": "Selected work from Linc Productions: brand systems, cinematic campaigns, websites and AI-assisted creative.",
+    "nameParts": [
+      "Linc",
+      "Productions"
+    ],
+    "headline": "Every frame is considered.",
+    "splashTag": "Selected Work",
+    "colophon": "Linc Productions · Creative Operating Infrastructure",
+    "bio": "Brand systems, cinematic campaigns, websites and AI-assisted creative, built for businesses that need to look as serious as they are.",
+    "address": [
+      "Strategy sessions now open",
+      "Start a project at /strategy"
+    ],
+    "menu": [
+      {
+        "label": "The Archive",
+        "action": "grid"
+      },
+      {
+        "label": "Studio",
+        "action": "link",
+        "href": "/studio"
+      },
+      {
+        "label": "Services",
+        "action": "link",
+        "href": "/services"
+      },
+      {
+        "label": "Linc OS",
+        "action": "link",
+        "href": "/linc-os"
+      },
+      {
+        "label": "Strategy Session",
+        "action": "link",
+        "href": "/strategy"
+      },
+      {
+        "label": "Home",
+        "action": "link",
+        "href": "/"
+      }
+    ]
+  },
+  "intro": {
+    "video": "/video/hero-earth.mp4",
+    "playbackRate": 2
+  },
+  "avatar": "/images/logo-mark.png",
+  "shots": [
+    {
+      "src": "/archive/media/night-orbit.jpg",
+      "thumb": "",
+      "title": "Night Orbit",
+      "place": "Cinematic Campaigns",
+      "note": "Opening frame of the Linc Productions hero film: the planet at night, lit from the edge."
+    },
+    {
+      "src": "/archive/media/first-light.jpg",
+      "thumb": "",
+      "title": "First Light",
+      "place": "Brand Film",
+      "note": "Sunrise breaking over the curve of the Earth. Still from the Linc Productions hero film."
+    },
+    {
+      "src": "/archive/media/horizon.jpg",
+      "thumb": "",
+      "title": "Horizon",
+      "place": "Cinematic Campaigns",
+      "note": "A panoramic cut of the horizon line, built for wide-screen campaign layouts. Still from the Linc Productions hero film."
+    },
+    {
+      "src": "/archive/media/city-lights.jpg",
+      "thumb": "",
+      "title": "City Lights",
+      "place": "Art Direction",
+      "note": "Coastlines and cities traced in light. Still from the Linc Productions hero film."
+    },
+    {
+      "src": "/archive/media/the-limb.jpg",
+      "thumb": "",
+      "title": "The Limb",
+      "place": "Art Direction",
+      "note": "The thin blue edge of the atmosphere against open space. Still from the Linc Productions hero film."
+    },
+    {
+      "src": "/archive/media/atmosphere.jpg",
+      "thumb": "",
+      "title": "Atmosphere",
+      "place": "Brand Film",
+      "note": "Glow along the planet's edge, cropped as a square for social formats. Still from the Linc Productions hero film."
+    },
+    {
+      "src": "/archive/media/return.jpg",
+      "thumb": "",
+      "title": "Return",
+      "place": "Cinematic Campaigns",
+      "note": "Closing frame of the hero film, as the light settles over the horizon."
+    }
+  ]
+}
