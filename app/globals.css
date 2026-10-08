@@ -179,3 +179,29 @@ body {
   .mars-ch.on i.run::after{animation:none}
   .mars-panel{animation:none}
 }
+
+/* Mars hover, tooltip and sky additions */
+.mars-sky{position:absolute;inset:0;width:100%;height:100%}
+.mars-veil{background:linear-gradient(180deg,rgba(5,5,5,.4) 0%,rgba(5,5,5,0) 30%,rgba(5,5,5,0) 72%,rgba(5,5,5,.8) 100%)}
+.mars-m-card{position:absolute;left:26px;top:-16px;width:240px;padding:12px 14px;border-radius:8px;background:rgba(10,6,4,.82);border:1px solid rgba(255,170,110,.35);box-shadow:0 12px 40px rgba(0,0,0,.5),0 0 24px rgba(255,140,70,.18);backdrop-filter:blur(8px);opacity:0;transform:translateY(6px);transition:opacity .22s,transform .22s;pointer-events:none;text-align:left;white-space:normal}
+.mars-m-card b{display:block;font:600 13px/1.3 var(--font-grotesk),sans-serif;color:#fff}
+.mars-m-card span{display:block;margin-top:5px;font:400 12px/1.5 var(--font-grotesk),sans-serif;color:rgba(245,242,234,.78)}
+.mars-m.flip .mars-m-card{left:auto;right:26px}
+.mars-m:hover,.mars-m.hot{z-index:8}
+.mars-m:hover .mars-m-card,.mars-m.hot .mars-m-card,.mars-m:focus-visible .mars-m-card{opacity:1;transform:none}
+.mars-m:hover .mars-m-lbl,.mars-m.hot .mars-m-lbl{opacity:0}
+.mars-m:hover .mars-m-ring,.mars-m.hot .mars-m-ring{transform:scale(1.35);border-color:#fff;background:rgba(255,150,80,.28);box-shadow:0 0 0 2px rgba(255,170,110,.5),0 0 26px 6px rgba(255,140,70,.85)}
+.mars-m:hover .mars-m-num,.mars-m.hot .mars-m-num{color:#fff;text-shadow:0 0 8px rgba(255,170,110,.9)}
+.mars-ch:hover,.mars-ch.hot{color:#fff;text-shadow:0 0 12px rgba(255,150,80,.95)}
+.mars-ch:hover i,.mars-ch.hot i{background:rgba(255,150,80,.7)}
+.mars-tip{position:absolute;left:50%;bottom:calc(100% + 14px);transform:translateX(-50%);width:min(300px,86vw);padding:12px 14px;border-radius:8px;background:rgba(10,6,4,.86);border:1px solid rgba(255,170,110,.35);box-shadow:0 12px 40px rgba(0,0,0,.5);backdrop-filter:blur(8px);pointer-events:none;text-align:left;animation:marsIn .25s ease both}
+.mars-tip b{display:block;font:600 13px/1.3 var(--font-grotesk),sans-serif;color:#fff}
+.mars-tip span{display:block;margin-top:5px;font:400 12px/1.5 var(--font-grotesk),sans-serif;color:rgba(245,242,234,.78)}
+@media (hover:none){.mars-tip{display:none}}
+@media (prefers-reduced-motion:reduce){.mars-m-card,.mars-tip{transition:none;animation:none}}
+/* Narrow screens: crater cards would be cut off beside the marker, so the
+   tooltip above the chapter bar shows the hovered system instead. */
+@media (max-width:759px){.mars-m-card{display:none}}
+/* Center the tooltip with margins: its fade-in animation sets transform,
+   which would otherwise cancel a translateX(-50%) centering. */
+.mars-tip{left:0;right:0;margin:0 auto;transform:none}

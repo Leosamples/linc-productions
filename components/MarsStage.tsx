@@ -3,26 +3,40 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createMars } from "@/lib/marsStage";
+import { createSky } from "@/lib/marsSky";
 import type { Stop } from "@/components/servicesData";
 
 const TOUR_MS = 7500;
 const pad = (n: number) => String(n + 1).padStart(2, "0");
 
 export default function MarsStage({ stops }: { stops: Stop[] }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const skyRef = useRef<HTMLCanvasElement>(null);
   const markersRef = useRef<HTMLDivElement>(null);
-  const engine = useRef<{ focus: (i: number) => void; destroy: () => void } | null>(null);
+  const engine = useRef<{
+    focus: (i: number) => void;
+    hover: (i: number, silent?: boolean) => void;
+    destroy: () => void;
+  } | null>(null);
   const [i, setI] = useState(0);
   const [playing, setPlaying] = useState(true);
   const [ok, setOk] = useState(true);
   const [ready, setReady] = useState(false);
+  const [hot, setHot] = useState(-1);
+  const [tip, setTip] = useState(-1);
   const count = stops.length;
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) setPlaying(false);
-    const canvas = canvasRef.current;
     const markersEl = markersRef.current;
-    if (!canvas || !markersEl) return;
+    const skyEl = skyRef.current;
+    if (!markersEl || !markersEl.parentElement) return;
+    // A fresh canvas per engine: destroy() releases the WebGL context, so a
+    // remount (React Strict Mode does this in development) can't reuse it.
+    const canvas = document.createElement("canvas");
+    canvas.className = "mars-canvas";
+    canvas.setAttribute("aria-hidden", "true");
+    markersEl.parentElement.insertBefore(canvas, markersEl);
+    const sky = skyEl ? createSky(skyEl) : null;
     const e = createMars({
       canvas,
       markersEl,
@@ -32,15 +46,20 @@ export default function MarsStage({ stops }: { stops: Stop[] }) {
         setPlaying(false);
       },
       onDrift: () => setPlaying(false),
+      onHover: (n: number) => {
+        setHot(n);
+        // On narrow screens the crater cards are hidden (they'd be cut off);
+        // show the hovered crater in the tooltip above the bar instead.
+        if (window.matchMedia("(max-width: 759px)").matches) setTip(n);
+      },
       onReady: () => setReady(true),
     });
-    if (!e) {
-      setOk(false);
-      return;
-    }
-    engine.current = e;
+    if (e) engine.current = e;
+    else setOk(false);
     return () => {
-      e.destroy();
+      sky?.destroy();
+      e?.destroy();
+      canvas.remove();
       engine.current = null;
     };
   }, [stops]);
@@ -61,6 +80,17 @@ export default function MarsStage({ stops }: { stops: Stop[] }) {
     engine.current?.focus(n);
   }, []);
 
+  const over = (n: number) => {
+    setHot(n);
+    setTip(n);
+    engine.current?.hover(n, true);
+  };
+  const out = () => {
+    setHot(-1);
+    setTip(-1);
+    engine.current?.hover(-1, true);
+  };
+
   const s = stops[i];
   const prevIdx = (i - 1 + count) % count;
   const nextIdx = (i + 1) % count;
@@ -70,7 +100,7 @@ export default function MarsStage({ stops }: { stops: Stop[] }) {
       className={`mars-stage${ready ? " ready" : ""}${ok ? "" : " nogl"}`}
       aria-label="Linc Productions systems"
     >
-      <canvas ref={canvasRef} className="mars-canvas" aria-hidden="true" />
+      <canvas ref={skyRef} className="mars-sky" aria-hidden="true" />
       <div ref={markersRef} className="mars-markers" />
       <div className="mars-veil" aria-hidden="true" />
 
@@ -109,6 +139,12 @@ export default function MarsStage({ stops }: { stops: Stop[] }) {
       </aside>
 
       <div className="mars-bar">
+        {tip >= 0 && (
+          <div className="mars-tip" role="tooltip">
+            <b>{stops[tip].title}</b>
+            <span>{stops[tip].desc}</span>
+          </div>
+        )}
         <button
           type="button"
           className="mars-play"
@@ -125,10 +161,14 @@ export default function MarsStage({ stops }: { stops: Stop[] }) {
             <button
               key={st.id}
               type="button"
-              className={`mars-ch${n === i ? " on" : ""}`}
+              className={`mars-ch${n === i ? " on" : ""}${n === hot ? " hot" : ""}`}
               aria-label={st.title}
               aria-current={n === i}
               onClick={() => select(n)}
+              onMouseEnter={() => over(n)}
+              onMouseLeave={out}
+              onFocus={() => over(n)}
+              onBlur={out}
             >
               {pad(n)}
               <i className={playing && n === i ? "run" : ""} />
