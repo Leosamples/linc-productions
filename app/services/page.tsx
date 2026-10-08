@@ -1,63 +1,46 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import Reveal from "@/components/Reveal";
+import MarsStage from "@/components/MarsStage";
+import { STOPS } from "@/components/servicesData";
 
-const SERVICES = [
-  {
-    name: "Brand Presence Systems",
-    tagline: "Identity, positioning and the visual language a business runs on.",
-  },
-  {
-    name: "Content Systems",
-    tagline: "Photography and film libraries built for reuse across every channel.",
-  },
-  {
-    name: "Funnels & Lead Systems",
-    tagline: "Websites and campaigns engineered to convert attention into pipeline.",
-  },
-  {
-    name: "Cinematic Campaigns",
-    tagline: "Commercial production with a directorial point of view.",
-  },
-  {
-    name: "AI-Assisted Creative Systems",
-    tagline: "Production workflows that move at the speed modern brands need.",
-  },
-];
+export const metadata: Metadata = {
+  title: "Services | Linc Productions",
+  description:
+    "Six systems for serious brands: brand presence, content, funnels and lead systems, cinematic campaigns, AI-assisted creative and executive systems.",
+};
 
 export default function ServicesPage() {
   return (
-    <section className="container-edit py-20 md:py-28">
-      <Reveal>
-        <span className="kicker">System</span>
-        <h1 className="mt-4 max-w-2xl font-serif text-4xl text-paper md:text-5xl">
-          Five systems. One studio.
-        </h1>
-        <p className="mt-5 max-w-copy text-base leading-relaxed text-muted md:text-lg">
-          Every engagement draws from the same set of systems, scoped to
-          what your business actually needs right now.
-        </p>
-      </Reveal>
-
-      <div className="mt-14 divide-y divide-line border-y border-line">
-        {SERVICES.map((s) => (
-          <Reveal key={s.name}>
-            <div className="flex flex-col gap-2 py-8 md:flex-row md:items-center md:justify-between md:gap-10">
-              <div>
-                <h2 className="font-serif text-2xl text-paper">{s.name}</h2>
-                <p className="mt-2 max-w-md text-sm leading-relaxed text-muted">
-                  {s.tagline}
-                </p>
-              </div>
-              <Link
-                href="/strategy"
-                className="focus-ring shrink-0 rounded-sm text-sm text-muted transition-colors hover:text-signal"
-              >
-                Discuss this project →
-              </Link>
-            </div>
-          </Reveal>
-        ))}
-      </div>
-    </section>
+    <>
+      <MarsStage stops={STOPS} />
+      <section id="all-systems" className="container-edit py-20 md:py-28">
+        <span className="kicker">All systems</span>
+        <h2 className="mt-4 max-w-xl font-serif text-3xl text-paper md:text-4xl">
+          Everything we build, in one place.
+        </h2>
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {STOPS.map((s, n) => (
+            <article key={s.id} className="rounded-sm border border-line p-7">
+              <div className="text-xs text-muted">{String(n + 1).padStart(2, "0")}</div>
+              <h3 className="mt-3 font-serif text-lg text-paper">{s.title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted">{s.desc}</p>
+              <ul className="mt-4 space-y-1.5 text-sm text-paper/80">
+                {s.includes.map((x) => (
+                  <li key={x}>{x}</li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+        <div className="mt-12">
+          <Link
+            href="/strategy"
+            className="focus-ring inline-block rounded-full bg-paper px-7 py-3 text-sm font-semibold text-ink"
+          >
+            Book a Strategy Session
+          </Link>
+        </div>
+      </section>
+    </>
   );
 }
