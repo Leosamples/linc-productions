@@ -156,6 +156,7 @@
   }
   #film.done { opacity: 0; visibility: hidden; }
   #film video { width: 100%; height: 100%; object-fit: cover; filter: brightness(1.2) saturate(1.2); }
+  #tap-play { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 0.8rem 1.4rem; font-size: 0.9rem; }
   #skip { position: absolute; right: clamp(1rem, 4vw, 3rem); bottom: calc(clamp(1.25rem, 4vw, 3rem) + env(safe-area-inset-bottom, 0px)); }
 
   /* ── Grid, lightbox, menu panels ── */
@@ -253,7 +254,10 @@
   #moon .drift{width:100%;height:100%;animation:moonDrift 90s ease-in-out infinite alternate}
   @keyframes moonDrift{from{transform:translate(0,0)}to{transform:translate(calc(var(--earth)*.05),calc(var(--earth)*.035))}}
   @media (max-width:640px){#space{--earth:clamp(50px,15vw,70px)}#earth{right:7vw;top:19vh}#moon{right:calc(7vw + var(--earth)*1.32);top:calc(19vh - var(--earth)*.34)}#spaceEarthVideo{object-position:78% 40%;inset:auto;left:-49vw;top:10vh;width:163vw;height:auto;object-fit:contain;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 22%,#000 70%,transparent);mask-image:linear-gradient(to bottom,transparent,#000 22%,#000 70%,transparent)}}
-  @media (prefers-reduced-motion:reduce){#moon .drift{animation:none}}
+  #earth .spin{animation:earthSpin 90s linear infinite;will-change:transform}
+  #earth .spin.clouds{animation-duration:62s}
+  @keyframes earthSpin{from{transform:translateX(-200px)}to{transform:translateX(0)}}
+  @media (prefers-reduced-motion:reduce){#moon .drift{animation:none}#earth .spin{animation:none}}
 </style>
 </head>
 <body>
@@ -269,23 +273,23 @@
 <radialGradient id="eAtm" cx="50%" cy="50%" r="50%"><stop offset=".8" stop-color="#7cc8ff" stop-opacity="0"/><stop offset=".92" stop-color="#7cc8ff" stop-opacity=".5"/><stop offset="1" stop-color="#7cc8ff" stop-opacity="0"/></radialGradient>
 <clipPath id="eDisc"><circle cx="100" cy="100" r="92"/></clipPath>
 <filter id="eLand" x="0" y="0" width="100%" height="100%">
-<feTurbulence type="fractalNoise" baseFrequency=".011 .016" numOctaves="5" seed="12" result="n1"/>
+<feTurbulence type="fractalNoise" baseFrequency=".011 .016" numOctaves="5" seed="12" stitchTiles="stitch" result="n1"/>
 <feColorMatrix in="n1" type="matrix" values="0 0 0 0 .17  0 0 0 0 .34  0 0 0 0 .18  14 0 0 0 -7.7" result="landA"/>
-<feTurbulence type="fractalNoise" baseFrequency=".035 .03" numOctaves="3" seed="3" result="n2"/>
+<feTurbulence type="fractalNoise" baseFrequency=".035 .03" numOctaves="3" seed="3" stitchTiles="stitch" result="n2"/>
 <feColorMatrix in="n2" type="matrix" values="0 0 0 0 .52  0 0 0 0 .44  0 0 0 0 .28  9 0 0 0 -5.1" result="desert"/>
 <feComposite in="desert" in2="landA" operator="in" result="d2"/>
 <feMerge><feMergeNode in="landA"/><feMergeNode in="d2"/></feMerge>
 </filter>
 <filter id="eCloud" x="0" y="0" width="100%" height="100%">
-<feTurbulence type="fractalNoise" baseFrequency=".014 .06" numOctaves="5" seed="21"/>
+<feTurbulence type="fractalNoise" baseFrequency=".014 .06" numOctaves="5" seed="21" stitchTiles="stitch"/>
 <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  9 0 0 0 -4.5"/>
 </filter>
 </defs>
 <circle cx="100" cy="100" r="100" fill="url(#eAtm)"/>
 <g clip-path="url(#eDisc)">
 <circle cx="100" cy="100" r="92" fill="url(#eOcean)"/>
-<rect width="200" height="200" filter="url(#eLand)"/>
-<rect width="200" height="200" filter="url(#eCloud)" opacity=".34"/>
+<g class="spin land"><rect id="eLandTile" width="200" height="200" filter="url(#eLand)"/><use href="#eLandTile" x="200"/></g>
+<g class="spin clouds" opacity=".34"><rect id="eCloudTile" width="200" height="200" filter="url(#eCloud)"/><use href="#eCloudTile" x="200"/></g>
 <ellipse cx="100" cy="12" rx="46" ry="13" fill="#fff" opacity=".6"/>
 <ellipse cx="100" cy="190" rx="40" ry="11" fill="#fff" opacity=".5"/>
 <circle cx="100" cy="100" r="92" fill="url(#eRim)"/>
@@ -323,6 +327,7 @@
 </div>
 
 <div id="film" hidden>
+  <button class="pill" id="tap-play" type="button" hidden>Play intro</button>
   <button class="pill" id="skip" type="button">Skip intro</button>
 </div>
 
@@ -512,30 +517,54 @@
   // ── Intro film (falls back to revealing the archive directly) ──
   function playIntro(intro, next) {
     if (!intro || !intro.video || reduceMotion) { next(); return; }
-    var film = $("film"), finished = false;
+    var film = $("film"), tap = $("tap-play"), finished = false, endTimer = null;
+    var rate = intro.playbackRate || 1;
     var video = document.createElement("video");
-    video.muted = true; video.playsInline = true; video.autoplay = true; video.preload = "auto";
-    video.setAttribute("playsinline", "");
+    // Phones (iOS especially) only autoplay video that is muted and inline,
+    // and some versions check the attributes, not just the properties.
+    video.muted = true; video.defaultMuted = true; video.playsInline = true; video.autoplay = true; video.preload = "auto";
+    video.setAttribute("muted", ""); video.setAttribute("playsinline", ""); video.setAttribute("webkit-playsinline", ""); video.setAttribute("autoplay", "");
     video.src = intro.video;
     film.insertBefore(video, film.firstChild);
     film.hidden = false;
 
     function finish() {
       if (finished) return; finished = true;
+      clearTimeout(startTimer); clearTimeout(endTimer);
       film.classList.add("done");
       next();
       setTimeout(function () { video.pause(); film.remove(); }, 1300);
     }
-    video.addEventListener("loadedmetadata", function () {
-      video.playbackRate = intro.playbackRate || 1;
+    // If the browser blocks autoplay (e.g. iPhone Low Power Mode), offer a
+    // tap to play instead of silently skipping the intro.
+    function offerTap() {
+      if (finished) return;
+      clearTimeout(startTimer);
+      tap.hidden = false;
+    }
+    function tryPlay() {
+      var p = video.play();
+      if (p && p.catch) p.catch(offerTap);
+    }
+    tap.addEventListener("click", function () { tap.hidden = true; tryPlay(); });
+
+    video.addEventListener("loadedmetadata", function () { video.playbackRate = rate; });
+    // Time the cap from when playback actually starts, not from page load,
+    // so a slow connection doesn't cut the film short.
+    video.addEventListener("playing", function () {
+      clearTimeout(startTimer);
+      tap.hidden = true;
+      clearTimeout(endTimer);
+      var remaining = isFinite(video.duration) ? (video.duration - video.currentTime) / rate : 6;
+      endTimer = setTimeout(finish, Math.max(1, remaining) * 1000 + 1500);
     });
     video.addEventListener("ended", finish);
     video.addEventListener("error", finish);
     $("skip").addEventListener("click", finish);
-    // Never hold the archive hostage: cap the intro at 6 seconds.
-    setTimeout(finish, 6000);
-    var p = video.play();
-    if (p && p.catch) p.catch(finish);
+    // Never hold the archive hostage: if the film hasn't started within
+    // 8 seconds, offer the tap (Skip stays available).
+    var startTimer = setTimeout(offerTap, 8000);
+    tryPlay();
   }
 
   function reveal() { document.body.classList.add("ready"); }

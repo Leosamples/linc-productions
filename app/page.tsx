@@ -33,12 +33,12 @@ export default function HomePage() {
           <Reveal>
             <div className="hero-mark-wrap mb-10 flex justify-center">
               <Image
-                src="/images/logo-mark.png"
-                alt="Linc Productions mark"
-                width={680}
-                height={390}
+                src="/images/logo-full.png"
+                alt="Linc Productions"
+                width={714}
+                height={562}
                 priority
-                className="hero-mark h-24 w-auto md:h-32"
+                className="hero-mark h-auto w-56 md:w-96"
               />
             </div>
           </Reveal>
