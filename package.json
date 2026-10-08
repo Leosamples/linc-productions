@@ -6,9 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "archive:vendor": "esbuild scripts/archive-blob-client.mjs --bundle --format=esm --platform=browser --minify --target=es2020 --define:process.env={} --outfile=public/archive/vendor/blob-client.js",
+    "space-video": "node scripts/space-video.mjs"
   },
   "dependencies": {
+    "@vercel/blob": "^2.8.1",
     "framer-motion": "^11.3.19",
     "next": "14.2.35",
     "react": "^18.3.1",
@@ -20,6 +23,7 @@
     "@types/react": "^18.3.4",
     "@types/react-dom": "^18.3.0",
     "autoprefixer": "^10.4.20",
+    "esbuild": "^0.25.10",
     "postcss": "^8.4.41",
     "tailwindcss": "^3.4.10",
     "typescript": "^5.5.4"

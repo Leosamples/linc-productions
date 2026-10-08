@@ -47,10 +47,13 @@
     ]
   },
   "intro": {
-    "video": "/video/hero-earth.mp4",
-    "playbackRate": 2
+    "video": "/archive/media/video/intro.mp4",
+    "playbackRate": 1
   },
   "avatar": "/images/logo-mark.png",
+  "space": {
+    "earthVideo": ""
+  },
   "shots": [
     {
       "src": "/archive/media/night-orbit.jpg",

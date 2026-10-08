@@ -61,13 +61,9 @@
 
   /* ── Stage: star field + sphere ── */
   #stage {
-    position: fixed; inset: 0; overflow: hidden; touch-action: none; cursor: grab;
-    background:
-      radial-gradient(ellipse at 50% 55%, rgba(53, 183, 255, 0.10), transparent 60%),
-      var(--ink);
+    position: fixed; inset: 0; z-index: 10; overflow: hidden; touch-action: none; cursor: grab;
   }
   #stage.dragging { cursor: grabbing; }
-  #stars { position: absolute; inset: 0; width: 100%; height: 100%; }
   #viewport {
     position: absolute; inset: 0; perspective: 1400px;
     display: grid; place-items: center;
@@ -241,9 +237,81 @@
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { transition-duration: 0.01ms !important; transition-delay: 0s !important; }
   }
+
+  /* ── Deep-space backdrop (below #stage) ── */
+  #space{--earth:clamp(58px,8.6vw,170px);position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden;transition:opacity .7s ease}
+  #space::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 55%,rgba(53,183,255,.08),transparent 60%)}
+  body.lit #space{opacity:.3}
+  body.gridview #space{opacity:0}
+  #spaceStars{position:absolute;inset:0;width:100%;height:100%}
+  #spaceEarthVideo{position:absolute;inset:-3%;width:106%;height:106%;object-fit:cover;object-position:85% 45%;mix-blend-mode:screen;filter:contrast(1.12) saturate(1.05);opacity:0;transition:opacity 1.2s ease;pointer-events:none;will-change:transform}
+  #spaceEarthVideo.on{opacity:.95}
+  #space .orbitbody{position:absolute;will-change:transform}
+  #earth{width:var(--earth);height:var(--earth);right:7vw;top:20vh;filter:drop-shadow(0 0 calc(var(--earth)*.12) rgba(80,165,255,.38))}
+  #moon{--moon:calc(var(--earth)*.27);width:var(--moon);height:var(--moon);right:calc(7vw + var(--earth)*1.32);top:calc(20vh - var(--earth)*.34)}
+  #space svg{display:block;width:100%;height:100%}
+  #moon .drift{width:100%;height:100%;animation:moonDrift 90s ease-in-out infinite alternate}
+  @keyframes moonDrift{from{transform:translate(0,0)}to{transform:translate(calc(var(--earth)*.05),calc(var(--earth)*.035))}}
+  @media (max-width:640px){#space{--earth:clamp(50px,15vw,70px)}#earth{right:7vw;top:19vh}#moon{right:calc(7vw + var(--earth)*1.32);top:calc(19vh - var(--earth)*.34)}#spaceEarthVideo{object-position:78% 40%;inset:auto;left:-49vw;top:10vh;width:163vw;height:auto;object-fit:contain;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 22%,#000 70%,transparent);mask-image:linear-gradient(to bottom,transparent,#000 22%,#000 70%,transparent)}}
+  @media (prefers-reduced-motion:reduce){#moon .drift{animation:none}}
 </style>
 </head>
 <body>
+
+<div id="space" aria-hidden="true">
+<canvas id="spaceStars"></canvas>
+<video id="spaceEarthVideo" muted loop playsinline preload="auto" aria-hidden="true"></video>
+<div id="earth" class="orbitbody">
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<radialGradient id="eOcean" cx="36%" cy="32%" r="80%"><stop offset="0" stop-color="#5fb6f4"/><stop offset=".4" stop-color="#1a66bd"/><stop offset=".78" stop-color="#0a2d68"/><stop offset="1" stop-color="#030e22"/></radialGradient>
+<radialGradient id="eShade" cx="30%" cy="26%" r="88%"><stop offset=".34" stop-color="#000" stop-opacity="0"/><stop offset=".68" stop-color="#000" stop-opacity=".62"/><stop offset="1" stop-color="#000" stop-opacity=".97"/></radialGradient><radialGradient id="eRim" cx="50%" cy="50%" r="50%"><stop offset=".86" stop-color="#8fd0ff" stop-opacity="0"/><stop offset="1" stop-color="#8fd0ff" stop-opacity=".42"/></radialGradient>
+<radialGradient id="eAtm" cx="50%" cy="50%" r="50%"><stop offset=".8" stop-color="#7cc8ff" stop-opacity="0"/><stop offset=".92" stop-color="#7cc8ff" stop-opacity=".5"/><stop offset="1" stop-color="#7cc8ff" stop-opacity="0"/></radialGradient>
+<clipPath id="eDisc"><circle cx="100" cy="100" r="92"/></clipPath>
+<filter id="eLand" x="0" y="0" width="100%" height="100%">
+<feTurbulence type="fractalNoise" baseFrequency=".011 .016" numOctaves="5" seed="12" result="n1"/>
+<feColorMatrix in="n1" type="matrix" values="0 0 0 0 .17  0 0 0 0 .34  0 0 0 0 .18  14 0 0 0 -7.7" result="landA"/>
+<feTurbulence type="fractalNoise" baseFrequency=".035 .03" numOctaves="3" seed="3" result="n2"/>
+<feColorMatrix in="n2" type="matrix" values="0 0 0 0 .52  0 0 0 0 .44  0 0 0 0 .28  9 0 0 0 -5.1" result="desert"/>
+<feComposite in="desert" in2="landA" operator="in" result="d2"/>
+<feMerge><feMergeNode in="landA"/><feMergeNode in="d2"/></feMerge>
+</filter>
+<filter id="eCloud" x="0" y="0" width="100%" height="100%">
+<feTurbulence type="fractalNoise" baseFrequency=".014 .06" numOctaves="5" seed="21"/>
+<feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  9 0 0 0 -4.5"/>
+</filter>
+</defs>
+<circle cx="100" cy="100" r="100" fill="url(#eAtm)"/>
+<g clip-path="url(#eDisc)">
+<circle cx="100" cy="100" r="92" fill="url(#eOcean)"/>
+<rect width="200" height="200" filter="url(#eLand)"/>
+<rect width="200" height="200" filter="url(#eCloud)" opacity=".34"/>
+<ellipse cx="100" cy="12" rx="46" ry="13" fill="#fff" opacity=".6"/>
+<ellipse cx="100" cy="190" rx="40" ry="11" fill="#fff" opacity=".5"/>
+<circle cx="100" cy="100" r="92" fill="url(#eRim)"/>
+<circle cx="100" cy="100" r="92" fill="url(#eShade)"/>
+</g>
+</svg>
+</div>
+<div id="moon" class="orbitbody"><div class="drift">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<radialGradient id="mBase" cx="36%" cy="32%" r="80%"><stop offset="0" stop-color="#efece5"/><stop offset=".5" stop-color="#bdb9b0"/><stop offset=".85" stop-color="#7d7972"/><stop offset="1" stop-color="#38362f"/></radialGradient>
+<radialGradient id="mShade" cx="33%" cy="29%" r="86%"><stop offset=".4" stop-color="#000" stop-opacity="0"/><stop offset=".75" stop-color="#000" stop-opacity=".55"/><stop offset="1" stop-color="#000" stop-opacity=".94"/></radialGradient>
+<clipPath id="mDisc"><circle cx="50" cy="50" r="48"/></clipPath>
+<filter id="mMaria" x="0" y="0" width="100%" height="100%">
+<feTurbulence type="fractalNoise" baseFrequency=".035 .04" numOctaves="4" seed="8"/>
+<feColorMatrix type="matrix" values="0 0 0 0 .33  0 0 0 0 .32  0 0 0 0 .30  2.4 0 0 0 -1.15"/>
+</filter>
+</defs>
+<g clip-path="url(#mDisc)">
+<circle cx="50" cy="50" r="48" fill="url(#mBase)"/>
+<rect width="100" height="100" filter="url(#mMaria)" opacity=".7"/>
+<circle cx="50" cy="50" r="48" fill="url(#mShade)"/>
+</g>
+</svg>
+</div></div>
+</div>
 
 <div id="splash" aria-live="polite">
   <div>
@@ -259,7 +327,6 @@
 </div>
 
 <main id="stage" aria-label="Portfolio archive. Drag to rotate, select a frame to open it.">
-  <canvas id="stars" aria-hidden="true"></canvas>
   <div id="viewport"><div id="sphere"></div></div>
 </main>
 
@@ -328,12 +395,28 @@
 (function () {
   "use strict";
 
-  var MANIFEST_URL = "/archive/manifest.json";
+  // The saved manifest (Vercel Blob, via the API) wins; the static file is the fallback.
+  var MANIFEST_URL = "/api/archive/manifest";
+  var FALLBACK_MANIFEST_URL = "/archive/manifest.json";
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var $ = function (id) { return document.getElementById(id); };
+  // Edit mode only exists with ?edit=1. Without it, no edit code is loaded.
+  var EDIT_MODE = new URLSearchParams(location.search).get("edit") === "1";
+  var editUnlocked = false;
+  if (EDIT_MODE) { try { editUnlocked = !!sessionStorage.getItem("archive-admin"); } catch (e) {} }
 
-  fetch(MANIFEST_URL, { cache: "no-cache" })
-    .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+  function getJson(url) {
+    return fetch(url, { cache: "no-store" }).then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    });
+  }
+
+  getJson(MANIFEST_URL)
+    .catch(function (err) {
+      console.warn("Saved manifest unavailable, using the default:", err);
+      return getJson(FALLBACK_MANIFEST_URL);
+    })
     .then(start)
     .catch(function (err) {
       console.error("Archive manifest failed to load:", err);
@@ -350,6 +433,7 @@
   }
 
   function start(data) {
+    var rawManifest = JSON.parse(JSON.stringify(data));
     var site = data.site || {};
     var shots = (data.shots || []).filter(function (s) { return s && s.src; }).map(function (s) {
       return {
@@ -391,6 +475,7 @@
     });
 
     buildMenu(site.menu || []);
+    if (window.__space) window.__space.setEarthVideo((data.space && data.space.earthVideo) || "");
 
     // ── Splash: preload thumbnails, learn each image's shape ──
     var total = shots.length, loaded = 0;
@@ -418,7 +503,9 @@
       buildSphere(shots);
       buildGrid(shots);
       $("splash").classList.add("done");
-      playIntro(data.intro, reveal);
+      // While editing (unlocked), skip the intro so each save reloads straight to the archive.
+      playIntro(EDIT_MODE && editUnlocked ? null : data.intro, reveal);
+      if (EDIT_MODE) loadEditMode(rawManifest);
     });
   }
 
@@ -452,6 +539,19 @@
   }
 
   function reveal() { document.body.classList.add("ready"); }
+
+  // ── Edit mode loader (only with ?edit=1) ──
+  function loadEditMode(manifest) {
+    window.__archive = {
+      manifest: manifest,
+      openGrid: function () { showPanel("grid"); },
+      closePanel: closePanel
+    };
+    var s = document.createElement("script");
+    s.type = "module";
+    s.src = "/archive/edit.js";
+    document.body.appendChild(s);
+  }
 
   // ── Fibonacci sphere of cards ──
   var sphereState = { rx: -8, ry: 0, vx: 0, vy: 0, cards: [], dragging: false };
@@ -584,6 +684,8 @@
     lastFocus = lastFocus || document.activeElement;
     openPanel = $(id);
     openPanel.classList.add("open");
+    document.body.classList.toggle("lit", id === "lightbox");
+    document.body.classList.toggle("gridview", id === "grid");
     var btn = openPanel.querySelector("[data-close]");
     if (btn) btn.focus();
   }
@@ -591,6 +693,7 @@
     if (!openPanel) return;
     openPanel.classList.remove("open");
     openPanel = null;
+    document.body.classList.remove("lit", "gridview");
     if (lastFocus && lastFocus.focus) lastFocus.focus();
     lastFocus = null;
   }
@@ -647,31 +750,201 @@
     });
   }
 
-  // ── Star field, echoing the homepage hero ──
-  (function stars() {
-    var canvas = $("stars"), ctx = canvas.getContext("2d"), pts = [], dpr = Math.min(window.devicePixelRatio || 1, 2);
-    function size() {
-      canvas.width = innerWidth * dpr; canvas.height = innerHeight * dpr;
-      pts = [];
-      var count = Math.round((innerWidth * innerHeight) / 5200);
-      for (var i = 0; i < count; i++) {
-        pts.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, r: Math.random() * 1.1 * dpr + 0.2, p: Math.random() * Math.PI * 2 });
+})();
+
+// ── Deep-space backdrop: stars, Milky Way, shooting stars, Earth/Moon parallax ──
+(function () {
+  var host = document.getElementById("space");
+  if (!host) return;
+  var cv = document.getElementById("spaceStars");
+  var cx = cv.getContext("2d");
+  var earth = document.getElementById("earth");
+  var moon = document.getElementById("moon");
+  var video = document.getElementById("spaceEarthVideo");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var W = 0, H = 0, dpr = 1, stars = [], shooters = [], band = null;
+  var par = { x: 0, y: 0, tx: 0, ty: 0 };
+  var nextShot = 1.2, lastT = 0, shotsSoFar = 0, videoReady = false;
+  var BAND_ANGLE = -0.38;
+
+  function gauss() { return (Math.random() + Math.random() + Math.random() + Math.random() - 2) / 2; }
+
+  // Milky Way: drawn once per resize into an offscreen canvas.
+  function buildBand() {
+    band = document.createElement("canvas");
+    band.width = Math.round(W * dpr); band.height = Math.round(H * dpr);
+    var b = band.getContext("2d");
+    b.scale(dpr, dpr);
+    b.translate(W / 2, H / 2);
+    b.rotate(BAND_ANGLE);
+    var th = Math.min(W, H) * 0.2;
+    var len = Math.hypot(W, H) * 1.1;
+    // Soft glow along the band.
+    for (var k = -7; k <= 7; k++) {
+      var gx = (k / 7) * len / 2, gy = gauss() * th * 0.15, gr = th * (0.9 + Math.random() * 0.7);
+      var g = b.createRadialGradient(gx, gy, 0, gx, gy, gr);
+      g.addColorStop(0, "rgba(176,196,236,0.045)");
+      g.addColorStop(1, "rgba(176,196,236,0)");
+      b.fillStyle = g;
+      b.fillRect(gx - gr, gy - gr, gr * 2, gr * 2);
+    }
+    // Fine star dust concentrated in the band.
+    var dust = Math.min(9000, Math.round((W * H) / 140));
+    for (var i = 0; i < dust; i++) {
+      var x = (Math.random() - 0.5) * len, y = gauss() * th * 0.55;
+      b.fillStyle = "rgba(232,236,248," + (0.04 + Math.random() * 0.2).toFixed(3) + ")";
+      var s = 0.3 + Math.random() * 0.6;
+      b.fillRect(x, y, s, s);
+    }
+    // A faint dark dust lane through the middle.
+    b.globalCompositeOperation = "destination-out";
+    b.beginPath();
+    for (var j = 0; j <= 40; j++) {
+      var lx = -len / 2 + (j / 40) * len, ly = Math.sin(j * 0.55) * th * 0.06;
+      if (j === 0) b.moveTo(lx, ly); else b.lineTo(lx, ly);
+    }
+    b.lineWidth = th * 0.09;
+    b.strokeStyle = "rgba(0,0,0,0.45)";
+    b.filter = "blur(" + Math.round(th * 0.05) + "px)";
+    b.stroke();
+    b.filter = "none";
+    b.globalCompositeOperation = "source-over";
+  }
+
+  function size() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    stars = [];
+    var count = Math.min(1400, Math.round((W * H) / 1700));
+    for (var i = 0; i < count; i++) {
+      var depth = Math.random();
+      stars.push({
+        x: Math.random() * W, y: Math.random() * H,
+        r: 0.25 + depth * depth * 1.15,
+        a: 0.25 + Math.random() * 0.65,
+        tw: 0.4 + Math.random() * 1.6, ph: Math.random() * Math.PI * 2,
+        d: 0.2 + depth * 0.8,
+        warm: Math.random() < 0.12
+      });
+    }
+    buildBand();
+  }
+
+  function spawnShooter() {
+    var fromTop = Math.random() < 0.65;
+    var angle = 0.32 + Math.random() * 0.4;            // heading down and to the left
+    var speed = 700 + Math.random() * 600;             // px per second
+    shooters.push({
+      x: fromTop ? W * (0.35 + Math.random() * 0.7) : W + 20,
+      y: fromTop ? -20 : H * Math.random() * 0.45,
+      vx: -Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+      len: 110 + Math.random() * 140, life: 0, max: 0.9 + Math.random() * 0.7
+    });
+    shotsSoFar++;
+  }
+
+  function draw(t) {
+    var dt = Math.min(0.05, (t - lastT) / 1000 || 0);
+    lastT = t;
+    par.x += (par.tx - par.x) * 0.04;
+    par.y += (par.ty - par.y) * 0.04;
+
+    cx.clearRect(0, 0, W, H);
+    if (band) cx.drawImage(band, par.x * -6, par.y * -4, W, H);
+
+    var time = t / 1000;
+    for (var i = 0; i < stars.length; i++) {
+      var s = stars[i];
+      var alpha = reduce ? s.a : s.a * (0.7 + 0.3 * Math.sin(time * s.tw + s.ph));
+      var x = s.x - par.x * 10 * s.d, y = s.y - par.y * 7 * s.d;
+      cx.fillStyle = s.warm ? "rgba(255,226,196," + alpha.toFixed(3) + ")" : "rgba(238,242,250," + alpha.toFixed(3) + ")";
+      if (s.r < 0.9) cx.fillRect(x, y, s.r * 1.6, s.r * 1.6);
+      else { cx.beginPath(); cx.arc(x, y, s.r, 0, Math.PI * 2); cx.fill(); }
+    }
+
+    if (!reduce) {
+      if (time > nextShot) { spawnShooter(); nextShot = time + 2.5 + Math.random() * 5; }
+      for (var k = shooters.length - 1; k >= 0; k--) {
+        var sh = shooters[k];
+        sh.life += dt; sh.x += sh.vx * dt; sh.y += sh.vy * dt;
+        var fade = Math.min(1, sh.life * 6) * Math.max(0, 1 - sh.life / sh.max);
+        if (fade <= 0 || sh.x < -300 || sh.y > H + 300) { shooters.splice(k, 1); continue; }
+        var mag = Math.hypot(sh.vx, sh.vy);
+        var tx = sh.x - (sh.vx / mag) * sh.len, ty = sh.y - (sh.vy / mag) * sh.len;
+        var g = cx.createLinearGradient(sh.x, sh.y, tx, ty);
+        g.addColorStop(0, "rgba(255,255,255," + (0.95 * fade).toFixed(3) + ")");
+        g.addColorStop(0.3, "rgba(150,210,255," + (0.5 * fade).toFixed(3) + ")");
+        g.addColorStop(1, "rgba(53,183,255,0)");
+        cx.strokeStyle = g; cx.lineWidth = 1.6; cx.lineCap = "round";
+        cx.beginPath(); cx.moveTo(sh.x, sh.y); cx.lineTo(tx, ty); cx.stroke();
+        cx.fillStyle = "rgba(255,255,255," + fade.toFixed(3) + ")";
+        cx.beginPath(); cx.arc(sh.x, sh.y, 1.4, 0, Math.PI * 2); cx.fill();
       }
     }
-    function draw(t) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (var i = 0; i < pts.length; i++) {
-        var s = pts[i];
-        var a = reduceMotion ? 0.55 : 0.35 + 0.35 * Math.sin(t / 1400 + s.p);
-        ctx.fillStyle = "rgba(245,242,234," + a.toFixed(3) + ")";
-        ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2); ctx.fill();
+
+    // Parallax for the planets and the Earth video.
+    var ex = par.x * 14, ey = par.y * 10;
+    earth.style.transform = "translate3d(" + ex + "px," + ey + "px,0)";
+    moon.style.transform = "translate3d(" + ex * 1.25 + "px," + ey * 1.25 + "px,0)";
+    if (video) {
+      video.style.transform = "translate3d(" + (ex * .5) + "px," + (ey * .5) + "px,0)";
+      // Pause while the grid covers the page; resume when it closes.
+      var hidden = document.body.classList.contains("gridview");
+      if (videoReady && !reduce) {
+        if (hidden && !video.paused) video.pause();
+        else if (!hidden && video.paused) { var p = video.play(); if (p && p.catch) p.catch(function () {}); }
       }
-      if (!reduceMotion) requestAnimationFrame(draw);
     }
-    size();
-    window.addEventListener("resize", function () { size(); if (reduceMotion) requestAnimationFrame(draw); });
-    requestAnimationFrame(draw);
-  })();
+
+    if (!reduce) requestAnimationFrame(draw);
+  }
+
+  window.addEventListener("pointermove", function (e) {
+    par.tx = (e.clientX / (W || 1) - 0.5) * 2;
+    par.ty = (e.clientY / (H || 1) - 0.5) * 2;
+  }, { passive: true });
+  window.addEventListener("resize", function () { size(); if (reduce) requestAnimationFrame(draw); });
+
+  function showPlanets(show) {
+    earth.style.display = show ? "" : "none";
+    moon.style.display = show ? "" : "none";
+  }
+
+  // Called by the page once the manifest is loaded (space.earthVideo).
+  function setEarthVideo(url) {
+    if (!video) return;
+    if (!url) { video.remove(); video = null; showPlanets(true); return; }
+    video.addEventListener("canplay", function onReady() {
+      video.removeEventListener("canplay", onReady);
+      videoReady = true;
+      video.classList.add("on");
+      showPlanets(false);
+      if (reduce) { video.pause(); video.currentTime = 0; }
+      else { var p = video.play(); if (p && p.catch) p.catch(function () {}); }
+    });
+    video.addEventListener("error", function () {
+      videoReady = false;
+      video.classList.remove("on");
+      showPlanets(true);
+    });
+    video.muted = true;
+    video.src = url;
+  }
+
+  window.__space = {
+    setEarthVideo: setEarthVideo,
+    // Read-only snapshot, handy for checking the backdrop from the console.
+    state: function () {
+      return { shooters: shooters.length, shotsSoFar: shotsSoFar, stars: stars.length,
+        video: video ? { on: video.classList.contains("on"), paused: video.paused, src: video.getAttribute("src") } : null,
+        earthVisible: earth.style.display !== "none" };
+    }
+  };
+
+  size();
+  requestAnimationFrame(draw);
 })();
 </script>
 </body>
