@@ -3,6 +3,7 @@ import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import SunScrollBackdrop from "@/components/SunScrollBackdrop";
 import ShootingStars from "@/components/ShootingStars";
+import StarField from "@/components/StarField";
 
 const WHAT_WE_BUILD = [
   { title: "Brand Presence Systems", desc: "Brand strategy, identity systems and voice — built to make executive businesses instantly recognizable and instantly trusted." },
@@ -26,9 +27,9 @@ export default function HomePage() {
     <>
       {/* Hero */}
       <SunScrollBackdrop />
+      <StarField />
+      <ShootingStars fullscreen />
       <section className="relative flex min-h-[92vh] flex-col justify-center overflow-hidden">
-        <ShootingStars />
-
         <div className="container-edit relative py-24 text-center [text-shadow:0_2px_24px_rgba(0,0,0,0.55)]">
           <Reveal>
             <div className="hero-mark-wrap mb-10 flex justify-center">
