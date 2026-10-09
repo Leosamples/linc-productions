@@ -218,3 +218,37 @@ body {
 @media (prefers-reduced-motion:reduce){.sun-breathe{animation:none}.sun-rise{transform:none!important}}
 /* Home page only (where the Sun layer exists): keep footer text readable over the Sun. */
 body:has(.sun-rise) footer{background:linear-gradient(180deg,rgba(5,5,5,.3),rgba(5,5,5,.55));text-shadow:0 1px 2px rgba(0,0,0,.9),0 0 14px rgba(0,0,0,.85)}
+
+/* Home: "What We Build" mission-control panel (components/WhatWeBuild.tsx) */
+.wwb-rule{height:1px;background:linear-gradient(90deg,#35B7FF 0,#35B7FF 64px,rgba(53,183,255,.35) 64px,rgba(245,242,234,.10) 30%,transparent 100%)}
+.wwb-card{position:relative;display:flex;flex-direction:column;width:100%;padding:2rem;background:rgba(8,10,14,.35);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);outline:1px solid rgba(245,242,234,.10);outline-offset:0;transition:transform .35s cubic-bezier(.16,1,.3,1),outline-color .3s;overflow:hidden;--mx:50%;--my:50%}
+@media (min-width:768px){.wwb-card{padding:2.5rem}}
+.wwb-card:hover,.wwb-card:focus-within{outline-color:rgba(53,183,255,.45);transform:translateY(-2px);z-index:2}
+.wwb-spot{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .3s;background:radial-gradient(280px circle at var(--mx) var(--my),rgba(53,183,255,.12),transparent 70%)}
+.wwb-card:hover .wwb-spot{opacity:1}
+.wwb-topline{position:absolute;left:0;right:0;top:0;height:1px;background:#35B7FF;transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.16,1,.3,1)}
+.wwb-card:hover .wwb-topline,.wwb-card:focus-within .wwb-topline{transform:scaleX(1)}
+.wwb-index{position:absolute;top:1.5rem;right:1.75rem;font-family:var(--font-cinzel),serif;font-size:56px;line-height:1;color:#F5F2EA;opacity:.08;transition:opacity .3s;pointer-events:none;user-select:none}
+.wwb-card:hover .wwb-index{opacity:.2}
+.wwb-icon{position:relative;color:#F5F2EA;width:28px;height:28px}
+.wwb-icon .wwb-accent{transition:filter .3s}
+.wwb-card:hover .wwb-accent{filter:drop-shadow(0 0 3px #35B7FF) drop-shadow(0 0 7px rgba(53,183,255,.8))}
+.wwb-card h3,.wwb-card p,.wwb-card ul,.wwb-card a{position:relative}
+.wwb-tag{font:500 11px/1 var(--font-grotesk),sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#9C9890;border:1px solid rgba(245,242,234,.14);padding:6px 9px}
+.wwb-link{display:inline-flex;align-items:center;gap:.4rem;font-size:13px;color:#F5F2EA;white-space:nowrap;border-bottom:1px solid rgba(245,242,234,.25);padding-bottom:2px;transition:color .25s,border-color .25s}
+.wwb-link span{display:inline-block;transition:transform .25s}
+.wwb-link:hover{color:#35B7FF;border-color:#35B7FF}
+.wwb-link:hover span,.wwb-card:hover .wwb-link span{transform:translateX(4px)}
+.wwb-featured{background:radial-gradient(120% 90% at 85% 15%,rgba(53,183,255,.14),transparent 60%),rgba(8,10,14,.45)}
+.wwb-orbit{position:absolute;right:-18%;top:50%;width:78%;aspect-ratio:1;transform:translateY(-50%);fill:none;stroke:rgba(53,183,255,.35);stroke-width:.8;opacity:.55;pointer-events:none}
+.wwb-orbit{animation:wwbOrbit 60s linear infinite}
+@keyframes wwbOrbit{from{transform:translateY(-50%) rotate(0)}to{transform:translateY(-50%) rotate(360deg)}}
+.wwb-live{position:absolute;top:1.6rem;right:1.75rem;display:inline-flex;align-items:center;gap:.45rem;font:500 11px/1 var(--font-grotesk),sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#35B7FF}
+.wwb-live i{width:7px;height:7px;border-radius:999px;background:#35B7FF;box-shadow:0 0 0 0 rgba(53,183,255,.6);animation:wwbPulse 2s ease-out infinite}
+@keyframes wwbPulse{0%{box-shadow:0 0 0 0 rgba(53,183,255,.6)}100%{box-shadow:0 0 0 9px rgba(53,183,255,0)}}
+@media (max-width:639px){.wwb-index{font-size:36px;top:1.25rem;right:1.25rem}}
+@media (prefers-reduced-motion:reduce){
+  .wwb-card,.wwb-card:hover,.wwb-card:focus-within{transform:none}
+  .wwb-topline{display:none}
+  .wwb-orbit,.wwb-live i{animation:none}
+}
