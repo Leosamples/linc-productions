@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import HeroBackdrop from "@/components/HeroBackdrop";
+import SunCanvas from "@/components/SunCanvas";
 
 // Fixed background for the home page: the hero Earth fades out and a rising
 // Sun fades in as the visitor scrolls down, and back again on the way up.
@@ -38,18 +39,8 @@ export default function SunScrollBackdrop() {
         // (Done in CSS rather than here so server and client render the same markup.)
         style={{ opacity: sunOpacity, scale: sunScale, y: sunY, mixBlendMode: "screen" }}
       >
-        <picture>
-          <source srcSet="/images/sun.webp" type="image/webp" />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/images/sun.jpg"
-            alt=""
-            width={1600}
-            height={1600}
-            decoding="async"
-            className="sun-img sun-breathe"
-          />
-        </picture>
+        {/* Animated in WebGL (churning surface, flares); still image as fallback */}
+        <SunCanvas visibility={sunOpacity} />
       </motion.div>
 
       {/* Keeps the copy readable where the Sun is brightest */}

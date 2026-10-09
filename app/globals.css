@@ -210,6 +210,9 @@ body {
    Centered with margin (not transform) because scale/translate come from scroll. */
 .sun-rise{position:absolute;left:50%;width:120vmax;aspect-ratio:1/1;margin-left:-60vmax;bottom:calc(-120vmax * .62);will-change:transform,opacity;-webkit-mask-image:radial-gradient(closest-side,#000 86%,transparent 99%);mask-image:radial-gradient(closest-side,#000 86%,transparent 99%)}
 .sun-img{display:block;width:100%;height:100%}
+.sun-box{position:relative;width:100%;height:100%}
+.sun-box .sun-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.sun-box.live .sun-img{visibility:hidden}
 .sun-breathe{animation:sunBreathe 12s ease-in-out infinite;transform-origin:50% 50%}
 @keyframes sunBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
 @media (prefers-reduced-motion:reduce){.sun-breathe{animation:none}.sun-rise{transform:none!important}}
