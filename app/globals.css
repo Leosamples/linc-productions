@@ -205,3 +205,13 @@ body {
 /* Center the tooltip with margins: its fade-in animation sets transform,
    which would otherwise cancel a translateX(-50%) centering. */
 .mars-tip{left:0;right:0;margin:0 auto;transform:none}
+
+/* Home page: rising Sun background (components/SunScrollBackdrop.tsx).
+   Centered with margin (not transform) because scale/translate come from scroll. */
+.sun-rise{position:absolute;left:50%;width:120vmax;aspect-ratio:1/1;margin-left:-60vmax;bottom:calc(-120vmax * .62);will-change:transform,opacity;-webkit-mask-image:radial-gradient(closest-side,#000 86%,transparent 99%);mask-image:radial-gradient(closest-side,#000 86%,transparent 99%)}
+.sun-img{display:block;width:100%;height:100%}
+.sun-breathe{animation:sunBreathe 12s ease-in-out infinite;transform-origin:50% 50%}
+@keyframes sunBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+@media (prefers-reduced-motion:reduce){.sun-breathe{animation:none}.sun-rise{transform:none!important}}
+/* Home page only (where the Sun layer exists): keep footer text readable over the Sun. */
+body:has(.sun-rise) footer{background:linear-gradient(180deg,rgba(5,5,5,.3),rgba(5,5,5,.55));text-shadow:0 1px 2px rgba(0,0,0,.9),0 0 14px rgba(0,0,0,.85)}

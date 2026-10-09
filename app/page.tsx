@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
-import HeroBackdrop from "@/components/HeroBackdrop";
+import SunScrollBackdrop from "@/components/SunScrollBackdrop";
 import ShootingStars from "@/components/ShootingStars";
 
 const WHAT_WE_BUILD = [
@@ -25,7 +25,7 @@ export default function HomePage() {
   return (
     <>
       {/* Hero */}
-      <HeroBackdrop />
+      <SunScrollBackdrop />
       <section className="relative flex min-h-[92vh] flex-col justify-center overflow-hidden">
         <ShootingStars />
 
@@ -97,9 +97,9 @@ export default function HomePage() {
           </h2>
         </Reveal>
 
-        <div className="mt-14 grid gap-px overflow-hidden rounded-sm bg-line sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-14 grid overflow-hidden rounded-sm border border-line sm:grid-cols-2 lg:grid-cols-3">
           {WHAT_WE_BUILD.map((s) => (
-            <div key={s.title} className="group bg-ink p-7 transition-colors hover:bg-panel md:p-8">
+            <div key={s.title} className="group bg-black/45 p-7 outline outline-1 outline-line backdrop-blur-sm transition-colors hover:bg-black/60 md:p-8">
               <h3 className="font-serif text-lg text-paper">{s.title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-muted">{s.desc}</p>
             </div>
@@ -124,7 +124,7 @@ export default function HomePage() {
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {SIX_SYSTEMS.map((w) => (
-            <div key={w.name} className="rounded-sm border border-line p-7">
+            <div key={w.name} className="rounded-sm border border-line bg-black/30 p-7 backdrop-blur-sm">
               <h3 className="font-serif text-lg text-paper">{w.name}</h3>
               <p className="mt-2 text-sm text-muted">{w.tagline}</p>
             </div>
